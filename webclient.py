@@ -10,7 +10,7 @@ class WebClient(object):
 
     def download_page(arg):
         # connect to the web site
-        f = urlopen("http://www.eps.udl.cat/ca/")
+        f = urlopen("https://www.banggood.com/es/Flashdeals.html")
         # get the download_page
         page = f.read()
         # close the connection
@@ -19,12 +19,16 @@ class WebClient(object):
 
     def search_activities(self, page):
         tree = bs4.BeautifulSoup(page, "lxml")
-        activities = tree.find_all("div", "featured-links-item")
+
+        ul = tree.find("ul", "goodlist_1")
+        li = ul.find_all("li")
         act_list = []
-        for activity in activities:
-            title =activity.find("span", "flink-title")
-            link = activity.find("a")
-            act_list.append((title.text, link["href"]))
+
+        for item in li:
+            # process item
+            price = item.find("span", "price").text
+            title = item.find("span", "title").text
+            act_list.append((title, price))
         return act_list
 
 

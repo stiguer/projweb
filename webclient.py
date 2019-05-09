@@ -1,9 +1,9 @@
-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# vim: set fileencoding=utf8 :
 
 from urllib.request import urlopen
 import bs4
-import xmltodict
-import pprint
 
 class WebClient(object):
     """WebClient class"""
@@ -12,34 +12,23 @@ class WebClient(object):
 
     def download_page(arg):
         # connect to the web site
-        f = urlopen("https://api.openweathermap.org/data/2.5/weather?q=LLeida,es&appid=0c5943338e78117b61d5a9249ba17b82&mode=xml&unit=metric")
+        f = urlopen("http://www.eps.udl.cat/ca/")
         # get the download_page
         page = f.read()
         # close the connection
         f.close()
         return page
 
-    #def search_activities(self, page):
-    #    tree = bs4.BeautifulSoup(page, "lxml")
-    #
-    #    ul = tree.find("ul", "goodlist_1")
-    #    li = ul.find_all("li")
-    #    act_list = []
-
-    #    for item in li:
-            # process item
-    #        price = item.find("span", "price").text
-    #        title = item.find("span", "title").text
-    #        act_list.append((title, price))
-    #    return act_list
-
     def search_activities(self, page):
-        xml = xmltodict.parse(page)
-        pprint.pprint(xml)
-        temp = xml['current']['temperature']['@value']
-        weather = xml['current']['weather']['@value']
-        return temp+" and "+weather
-
+        tree = bs4.BeautifulSoup(page, "lxml")
+    
+        activitats = arbre.find_all("div","featured-links-item")
+        activity_list = []
+        for activity in activitats:
+            title = activity.find("span","flink-title")
+            link = activity.find("a")
+            activity_list.append((title.text, link["href"]))
+        return activity_list
 
     def run(self):
         # download a web
